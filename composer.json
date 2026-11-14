@@ -1,0 +1,41 @@
+{
+    "name": "ksfraser/ksf-fa-opportunity",
+    "description": "FrontAccounting module: Opportunity sub-module spun off from CRM Opportunities tab. Owns opportunity pipeline data (stage, amount, probability, expected close date), answers RELATED_TO_FIELDS for the 'opportunity' type, and builds OpportunityResolvedDto instances.",
+    "type": "fa-module",
+    "license": "GPL-3.0",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Kevin Fraser",
+            "email": "kevin@ksfraser.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.3",
+        "ksfraser/related-to-core": "^1.1",
+        "ksfraser/ksf-fa-common": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ksfraser\\FrontAccounting\\Opportunity\\": "src/Ksfraser/FrontAccounting/Opportunity/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "process-timeout": 0,
+        "platform": {
+            "php": "7.4.33"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../ksf_related_to_core",
+            "symlink": true
+        }
+    ]
+}
