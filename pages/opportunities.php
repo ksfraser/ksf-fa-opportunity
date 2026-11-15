@@ -2,76 +2,50 @@
 
 declare(strict_types=1);
 
-use Ksfraser\FrontAccounting\Opportunity\Service\OpportunityService;
-use ksfraser\RelatedTo\DTO\RelatedQueryDto;
-use ksfraser\RelatedTo\DTO\RelatedRecordDto;
-use ksfraser\RelatedTo\UI\DefaultRelatedRecordsRenderer;
+/**
+ * ksf_FA_Opportunity — pages/opportunities.php. Deprecated forwarder shim.
+ *
+ * This page moved into the single front controller ../opportunity.php on the
+ * controller/refactor. The page body now lives in
+ * src/Ksfraser/FrontAccounting/Opportunity/Controller/OpportunityTabController.php
+ * and is reached as:
+ *
+ *     ../opportunity.php?view=opportunities
+ *
+ * This shim exists for one release so existing bookmarks and any hard-coded
+ * links keep resolving. It forwards internally rather than redirecting, so an
+ * in-flight POST keeps its body. Remove it in the next major version.
+ *
+ * Security: SA_OPPORTUNITY_VIEW — now enforced by opportunity.php from the tab's
+ * registered security area (see ../hooks.php::install_access).
+ *
+ * @package ksf_FA_Opportunity
+ * @since   2.0.0
+ * @deprecated 2.0.0 Forwarder to ../opportunity.php?view=opportunities
+ */
 
-$path_to_root = '../../..';
+$_GET['view'] = 'opportunities';
 
-include_once($path_to_root . '/includes/session.inc');
-add_access_extensions();
-
-$autoload = __DIR__ . '/../vendor/autoload.php';
-if (!file_exists($autoload)) {
-    display_error(_('Opportunity module dependencies are not installed'));
-    exit;
+// Point self/uri at the canonical controller so the rendered links and form
+// actions converge on opportunity.php instead of bouncing through this shim.
+if (isset($_SERVER['PHP_SELF'])) {
+    $_SERVER['PHP_SELF'] = preg_replace('#/pages/opportunities\.php$#', '/opportunity.php', $_SERVER['PHP_SELF']);
 }
-require_once $autoload;
-
-$service = new OpportunityService();
-$action = isset($_GET['action']) ? (string) $_GET['action'] : 'list';
-
-if ($action === 'list') {
-    page(_('Opportunities'));
-    $opps = $service->listAll();
-    echo '<p>' . _('Opportunities') . '</p>';
-    echo '<table class="selection">';
-    echo '<thead><tr>'
-        . '<th>' . _('Opportunity') . '</th>'
-        . '<th>' . _('Stage') . '</th>'
-        . '<th>' . _('Amount') . '</th>'
-        . '<th>' . _('Probability') . '</th>'
-        . '<th>' . _('Expected Close') . '</th>'
-        . '<th>' . _('Actions') . '</th>'
-        . '</tr></thead><tbody>';
-    foreach ($opps as $opp) {
-        echo '<tr>'
-            . '<td>' . htmlspecialchars($opp['label'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td>' . htmlspecialchars($opp['fields']['stage'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td>' . htmlspecialchars($opp['fields']['amount'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td>' . htmlspecialchars($opp['fields']['probability'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td>' . htmlspecialchars($opp['fields']['expectedClose'], ENT_QUOTES, 'UTF-8') . '</td>'
-            . '<td><a href="' . htmlspecialchars($opp['url'], ENT_QUOTES, 'UTF-8') . '" target="_blank">'
-            . _('Edit') . '</a></td>'
-            . '</tr>';
-    }
-    echo '</tbody></table>';
-
-    // Related records rendered via RelatedTo hook
-    $lhsId = isset($_GET['id']) ? (string) $_GET['id'] : '';
-    if (function_exists('hook_invoke') && class_exists(DefaultRelatedRecordsRenderer::class) && $lhsId !== '') {
-        $queryDto = new RelatedQueryDto('opportunity', $lhsId);
-        $queryResult = $queryDto;
-        hook_invoke('ksf_FA_RelatedTo', 'RELATED_TO', $queryResult, null);
-        if (is_array($queryResult) && isset($queryResult['related']) && is_array($queryResult['related'])) {
-            $renderer = new DefaultRelatedRecordsRenderer(array(
-                'label_resolver' => function ($type, $id) { return (string) $id; },
-                'url_resolver'   => function ($type, $id) { return '#'; },
-                'type_labels'    => array('opportunity' => _('Opportunities')),
-            ));
-            echo $renderer->renderRelatedRecords('opportunity', $lhsId, $queryResult['related'], array(
-                'css_class' => 'related-records',
-                'header_class' => 'related-header',
-                'table_class' => 'related-table',
-                'table_border' => true,
-            ));
-        }
-    }
-
-    end_page();
-    exit;
+if (isset($_SERVER['SCRIPT_NAME'])) {
+    $_SERVER['SCRIPT_NAME'] = preg_replace('#/pages/opportunities\.php$#', '/opportunity.php', $_SERVER['SCRIPT_NAME']);
+}
+if (isset($_SERVER['REQUEST_URI'])) {
+    $_SERVER['REQUEST_URI'] = preg_replace(
+        '#/pages/opportunities\.php(\?|$)#',
+        '/opportunity.php$1',
+        $_SERVER['REQUEST_URI']
+    );
 }
 
-display_error(_('Unknown action'));
-exit;
+// opportunity.php bootstraps FA with $path_to_root = '../../..', which PHP resolves
+// against the MAIN script's directory. This shim is one level deeper (pages/),
+// so move to the module root first or the include of
+// ../../includes/session.inc lands above the FA root and fatals.
+chdir(__DIR__ . '/..');
+
+require __DIR__ . '/../opportunity.php';

@@ -51,7 +51,26 @@ class hooks_ksf_FA_Opportunity extends hooks {
     /**
      * @BABOK Related: BR-OP-001
      */
-    function install_tabs($app) { }
+    function install_tabs($app) {
+        $level = null;
+        foreach ($app->modules as $idx => $mod) {
+            if ($mod->name === _("Opportunity")) {
+                $level = $idx;
+                break;
+            }
+        }
+        if ($level === null) {
+            $app->add_module(_("Opportunity"));
+            $level = count($app->modules) - 1;
+        }
+
+        $app->add_rapp_function(
+            $level,
+            _("Opportunities"),
+            'modules/ksf_FA_Opportunity/opportunity.php?view=opportunities',
+            'SA_OPPORTUNITY_VIEW'
+        );
+    }
     /**
      * @BABOK Related: BR-OP-001
      */
