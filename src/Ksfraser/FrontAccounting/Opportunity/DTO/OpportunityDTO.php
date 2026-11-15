@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Ksfraser\FrontAccounting\Opportunity\DTO;
 
+/**
+ * Opportunity — immutable value object wrapping 0_ksf_crm_opportunities data.
+ *
+ * @package Ksfraser\FrontAccounting\Opportunity\DTO
+ * @since   1.0.0
+ * @BABOK Related: BR-OP-002
+ */
 final class OpportunityDTO
 {
     public $id;
@@ -17,6 +24,9 @@ final class OpportunityDTO
     public $description;
     public $createdAt;
 
+    /**
+     * @BABOK Related: BR-OP-002
+     */
     public function __construct(
         int $id,
         string $opportunityName = '',
@@ -41,6 +51,9 @@ final class OpportunityDTO
         $this->createdAt      = $createdAt;
     }
 
+    /**
+     * @BABOK Related: BR-OP-002
+     */
     public function getDisplayLabel(): string
     {
         $parts = array();
@@ -50,6 +63,9 @@ final class OpportunityDTO
         return $parts === [] ? _('Opportunity #') . (string) $this->id : implode(' — ', $parts);
     }
 
+    /**
+     * @BABOK Related: BR-OP-002
+     */
     public function toArray(): array
     {
         return array(
@@ -66,6 +82,9 @@ final class OpportunityDTO
         );
     }
 
+    /**
+     * @BABOK Related: BR-OP-002
+     */
     public static function fromArray(array $data): self
     {
         return new self(

@@ -4,10 +4,22 @@ declare(strict_types=1);
 
 namespace Ksfraser\FrontAccounting\Opportunity\Repository;
 
+/**
+ * OpportunityRepository — SRP access to 0_ksf_crm_opportunities.
+ *
+ * Uses FA's native db_* calls only (no PDO, no raw mysqli).
+ *
+ * @package Ksfraser\FrontAccounting\Opportunity\Repository
+ * @since   1.0.0
+ * @BABOK Related: BR-OP-004
+ */
 final class OpportunityRepository
 {
     private string $table = 'ksf_crm_opportunities';
 
+    /**
+     * @BABOK Related: BR-OP-004
+     */
     public function findAll(): array
     {
         if (!function_exists('db_query') || !defined('TB_PREF')) { return array(); }
@@ -19,6 +31,9 @@ final class OpportunityRepository
         return $rows;
     }
 
+    /**
+     * @BABOK Related: BR-OP-004
+     */
     public function findById(int $id): ?array
     {
         if (!function_exists('db_query') || !defined('TB_PREF')) { return null; }
@@ -29,6 +44,9 @@ final class OpportunityRepository
         return $row === false ? null : $row;
     }
 
+    /**
+     * @BABOK Related: BR-OP-004
+     */
     public function save(array $data): int
     {
         if (!function_exists('db_query') || !defined('TB_PREF')) { return 0; }
@@ -48,6 +66,9 @@ final class OpportunityRepository
         return db_insert_id();
     }
 
+    /**
+     * @BABOK Related: BR-OP-004
+     */
     public function update(int $id, array $data): void
     {
         if (!function_exists('db_query') || !defined('TB_PREF')) { return; }
@@ -64,6 +85,9 @@ final class OpportunityRepository
         db_query($sql, 'Could not update opportunity');
     }
 
+    /**
+     * @BABOK Related: BR-OP-004
+     */
     public function delete(int $id): void
     {
         if (!function_exists('db_query') || !defined('TB_PREF')) { return; }

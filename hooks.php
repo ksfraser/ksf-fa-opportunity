@@ -34,15 +34,32 @@ if (!defined('SA_OPPORTUNITY_VIEW')) {
     define('SA_OPPORTUNITY_MANAGE', SS_ksf_FA_Opportunity | 2);
 }
 
+/**
+ * Opportunity module hooks — owns the 'opportunity' type in RelatedTo, answers
+ * RELATED_TO_FIELDS, OPPORTUNITY_RESOLVE and OPPORTUNITY_FIELDS.
+ *
+ * @package KsfFA_ksf_FA_Opportunity
+ * @version 1.0.0
+ * @BABOK Related: BR-OP-001
+ */
 class hooks_ksf_FA_Opportunity extends hooks {
     const RESPONDERS = array('RELATED_TO_FIELDS', 'OPPORTUNITY_RESOLVE', 'OPPORTUNITY_FIELDS');
 
     var $module_name = 'ksf_FA_Opportunity';
     var $version = '1.0.0';
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     function install_tabs($app) { }
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     function install_options($app) { }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     function install_access() {
         $security_sections[SS_ksf_FA_Opportunity] = _("Opportunity Management");
         $security_areas['SA_OPPORTUNITY_VIEW'] = array(SA_OPPORTUNITY_VIEW, _("View opportunities"));
@@ -50,6 +67,9 @@ class hooks_ksf_FA_Opportunity extends hooks {
         return array($security_areas, $security_sections);
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     function activate_extension($company, $check_only = true) {
         if ($check_only) { return true; }
         \ksfraser\FrontAccounting\Opportunity\Utils\ComposerDependencies::ensure(__DIR__);
@@ -63,6 +83,9 @@ class hooks_ksf_FA_Opportunity extends hooks {
         \ksfraser\FrontAccounting\Opportunity\Utils\ComposerDependencies::ensure(__DIR__);
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function getModuleConstants(&$data, $opts = null) {
         $data['constants'] = array(
             'SS_ksf_FA_Opportunity' => SS_ksf_FA_Opportunity,
@@ -72,11 +95,17 @@ class hooks_ksf_FA_Opportunity extends hooks {
         return true;
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function getModuleCapabilities(&$data, $opts = null) {
         $data['capabilities'] = self::RESPONDERS;
         return true;
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function hasCapability(&$data, $opts = null) {
         $capability = is_array($opts) && isset($opts['capability']) ? $opts['capability'] : null;
         if ($capability === null && isset($data['capability'])) {
@@ -86,6 +115,9 @@ class hooks_ksf_FA_Opportunity extends hooks {
         return $data['has_capability'];
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function respondToCapabilityRequest(&$data, $opts = null) {
         $request = is_array($opts) && isset($opts['request'])
             ? $opts['request']
@@ -106,6 +138,9 @@ class hooks_ksf_FA_Opportunity extends hooks {
         }
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function RELATED_TO_FIELDS(&$data, $opts = null) {
         if (!isset($data['module']) || !is_string($data['module'])) {
             $data['error'] = 'RELATED_TO_FIELDS requires data[module]';
@@ -129,6 +164,9 @@ class hooks_ksf_FA_Opportunity extends hooks {
         return null;
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function OPPORTUNITY_RESOLVE(&$data, $opts = null) {
         if (!isset($data['opportunity_id']) || !is_numeric($data['opportunity_id'])) {
             $data['error'] = 'OPPORTUNITY_RESOLVE requires data[opportunity_id]';
@@ -143,6 +181,9 @@ class hooks_ksf_FA_Opportunity extends hooks {
         return null;
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function OPPORTUNITY_FIELDS(&$data, $opts = null) {
         $data['fields'] = array(
             'opportunityName' => _('Opportunity Name'),

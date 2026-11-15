@@ -8,15 +8,32 @@ use Ksfraser\FrontAccounting\Opportunity\DTO\OpportunityDTO;
 use Ksfraser\FrontAccounting\Opportunity\Repository\OpportunityRepository;
 use ksfraser\RelatedTo\DTO\RelatedRecordDto;
 
+/**
+ * OpportunityService — use-case layer for opportunity resolution and display.
+ *
+ * Composes OpportunityRepository and builds resolved DTOs for RelatedTo display.
+ * Opportunity is the owning module for opportunity data; consuming modules
+ * override by registering their own OPPORTUNITY_RESOLVE listener.
+ *
+ * @package Ksfraser\FrontAccounting\Opportunity\Service
+ * @since   1.0.0
+ * @BABOK Related: BR-OP-001
+ */
 final class OpportunityService
 {
     private $repo;
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function __construct(?OpportunityRepository $repo = null)
     {
         $this->repo = $repo ?? new OpportunityRepository();
     }
 
+    /**
+     * @BABOK Related: BR-OP-001
+     */
     public function resolveById(int $id, ?RelatedRecordDto $dto = null): array
     {
         $row = $this->repo->findById($id);
@@ -48,6 +65,9 @@ final class OpportunityService
         );
     }
 
+    /**
+     * @BABOK Related: BR-OP-003
+     */
     public function listAll(): array
     {
         $rows = $this->repo->findAll();
@@ -72,6 +92,9 @@ final class OpportunityService
         return $results;
     }
 
+    /**
+     * @BABOK Related: BR-OP-003
+     */
     public function fieldMap(): array { return $this->labelMap(); }
     public function labelMap(): array
     {
