@@ -31,7 +31,7 @@ class OpportunityAppShell extends AbstractAppShell
         $this->add_module(_("Opportunity"));
 
         $menu = new FAModuleMenu(
-            'modules/ksf_FA_Opportunity/opportunity.php',
+            'modules/ksf_FA_Opportunity/index.php',
             'view',
             ''
         );

@@ -1,0 +1,29 @@
+# ksf_FA_Opportunity — .htaccess
+#
+# Route all requests through the single front controller index.php.
+# This replaces the old pages/*.php pattern where each page bootstrapped
+# itself independently.
+#
+# Existing static files (CSS, JS, images) are served directly.
+# Everything else is rewritten to index.php, which dispatches via the
+# OpportunityFrontController.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # RewriteBase depends on where the module is installed relative to FA root
+    RewriteBase /modules/ksf_FA_Opportunity/
+
+    # Don't rewrite existing files or directories
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Rewrite everything else to index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Custom error documents — route 404s to index.php so the front controller
+# can handle them gracefully (e.g., show the default view instead of a raw
+// 404 page).
+ErrorDocument 404 /modules/ksf_FA_Opportunity/index.php

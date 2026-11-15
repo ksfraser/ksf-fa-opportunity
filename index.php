@@ -37,6 +37,11 @@ if (file_exists(__DIR__ . '/bootstrap.php')) {
 
 $path_to_root = "../..";
 
+// Default view when none specified — show the opportunity list
+if (!isset($_GET['view']) && !isset($_GET['tab'])) {
+    $_GET['view'] = 'opportunities';
+}
+
 // The fallback security area is a REQUIRED constructor argument and is never
 // empty: it is what makes access enforcement fail closed for a tab contributed
 // by another module that registers without an area of its own.
